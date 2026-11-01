@@ -1,0 +1,99 @@
+data=# create table groups (
+id serial primary key,
+name varchar(100),
+code varchar(100) unique,
+faculty varchar(100) unique);
+CREATE TABLE
+
+data=# create table gg(id serial primary key,name varchar(100));
+CREATE TABLE
+
+data=# drop table gg;
+DROP TABLE
+
+data=# create table gg(id serial primary key,name varchar(100));
+CREATE TABLE
+
+data=# drop table if exists gg;
+DROP TABLE
+
+data=# alter table groups add column head varchar(100);
+ALTER TABLE
+
+data=# alter table groups add column gg varchar(100);
+ALTER TABLE
+
+data=# alter table groups drop column gg;
+ALTER TABLE
+
+data=# \d groups;
+                                    Table "public.groups"
+ Column  |          Type          | Collation | Nullable |              Default
+---------+------------------------+-----------+----------+------------------------------------
+ id      | integer                |           | not null | nextval('groups_id_seq'::regclass)
+ name    | character varying(100) |           |          |
+ code    | character varying(100) |           |          |
+ faculty | character varying(100) |           |          |
+ head    | character varying(100) |           |          |
+Indexes:
+    "groups_pkey" PRIMARY KEY, btree (id)
+    "groups_code_key" UNIQUE CONSTRAINT, btree (code)
+    "groups_faculty_key" UNIQUE CONSTRAINT, btree (faculty)
+
+data=# alter table groups alter column name type text;
+ALTER TABLE
+
+data=# \d groups;
+                                    Table "public.groups"
+ Column  |          Type          | Collation | Nullable |              Default
+---------+------------------------+-----------+----------+------------------------------------
+ id      | integer                |           | not null | nextval('groups_id_seq'::regclass)
+ name    | text                   |           |          |
+ code    | character varying(100) |           |          |
+ faculty | character varying(100) |           |          |
+ head    | character varying(100) |           |          |
+Indexes:
+    "groups_pkey" PRIMARY KEY, btree (id)
+    "groups_code_key" UNIQUE CONSTRAINT, btree (code)
+    "groups_faculty_key" UNIQUE CONSTRAINT, btree (faculty)
+
+data=# alter table groups add column email varchar(100);
+ALTER TABLE
+data=# alter table groups add constraint email_of_head unique (email);
+ALTER TABLE
+data=# \d groups
+                                    Table "public.groups"
+ Column  |          Type          | Collation | Nullable |              Default
+---------+------------------------+-----------+----------+------------------------------------
+ id      | integer                |           | not null | nextval('groups_id_seq'::regclass)
+ name    | text                   |           |          |
+ code    | character varying(100) |           |          |
+ faculty | character varying(100) |           |          |
+ head    | character varying(100) |           |          |
+ email   | character varying(100) |           |          |
+Indexes:
+    "groups_pkey" PRIMARY KEY, btree (id)
+    "email_of_head" UNIQUE CONSTRAINT, btree (email)
+    "groups_code_key" UNIQUE CONSTRAINT, btree (code)
+    "groups_faculty_key" UNIQUE CONSTRAINT, btree (faculty)
+
+data=# alter table groups rename column email to email_of_head;
+ALTER TABLE
+data=# \d groups;
+                                       Table "public.groups"
+    Column     |          Type          | Collation | Nullable |              Default
+---------------+------------------------+-----------+----------+------------------------------------
+ id            | integer                |           | not null | nextval('groups_id_seq'::regclass)
+ name          | text                   |           |          |
+ code          | character varying(100) |           |          |
+ faculty       | character varying(100) |           |          |
+ head          | character varying(100) |           |          |
+ email_of_head | character varying(100) |           |          |
+Indexes:
+    "groups_pkey" PRIMARY KEY, btree (id)
+    "email_of_head" UNIQUE CONSTRAINT, btree (email_of_head)
+    "groups_code_key" UNIQUE CONSTRAINT, btree (code)
+    "groups_faculty_key" UNIQUE CONSTRAINT, btree (faculty)
+
+data=#
+
