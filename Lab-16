@@ -1,0 +1,115 @@
+CREATE TABLE lab16_accounts (
+    account_id SERIAL PRIMARY KEY,
+    owner_name VARCHAR(100) NOT NULL,
+    balance NUMERIC(10,2) NOT NULL CHECK (balance >= 0)
+);
+CREATE TABLE
+INSERT INTO lab16_accounts (owner_name, balance) VALUES
+    ('Alice', 1000.00), ('Bob', 500.00);
+INSERT 0 2
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      | 1000.00
+          2 | Bob        |  500.00
+(2 rows)
+
+BEGIN;
+BEGIN
+UPDATE lab16_accounts SET balance = balance - 200 WHERE account_id = 1;
+UPDATE 1
+UPDATE lab16_accounts SET balance = balance + 200 WHERE account_id = 2;
+UPDATE 1
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      |  800.00
+          2 | Bob        |  700.00
+(2 rows)
+
+ROLLBACK;
+ROLLBACK
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      | 1000.00
+          2 | Bob        |  500.00
+(2 rows)
+
+BEGIN;
+BEGIN
+UPDATE lab16_accounts SET balance = balance - 200 WHERE account_id = 1;
+UPDATE 1
+UPDATE lab16_accounts SET balance = balance + 200 WHERE account_id = 2;
+UPDATE 1
+COMMIT;
+COMMIT
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      |  800.00
+          2 | Bob        |  700.00
+(2 rows)
+
+SELECT SUM(balance) AS total_balance FROM lab16_accounts;
+ total_balance
+---------------
+       1500.00
+(1 row)
+
+BEGIN;
+BEGIN
+SAVEPOINT before_bonus;
+SAVEPOINT
+UPDATE lab16_accounts SET balance = balance + 50 WHERE account_id = 2;
+UPDATE 1
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      |  800.00
+          2 | Bob        |  750.00
+(2 rows)
+
+ROLLBACK TO SAVEPOINT before_bonus;
+ROLLBACK
+COMMIT;
+COMMIT
+SELECT * FROM lab16_accounts ORDER BY account_id;
+ account_id | owner_name | balance
+------------+------------+---------
+          1 | Alice      |  800.00
+          2 | Bob        |  700.00
+(2 rows)
+
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+BEGIN
+SHOW transaction_isolation;
+ transaction_isolation
+-----------------------
+ repeatable read
+(1 row)
+
+SELECT SUM(balance) AS total_balance FROM lab16_accounts;
+ total_balance
+---------------
+       1500.00
+(1 row)
+
+COMMIT;
+COMMIT
+BEGIN TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+BEGIN
+SHOW transaction_isolation;
+ transaction_isolation
+-----------------------
+ serializable
+(1 row)
+
+SELECT SUM(balance) AS total_balance FROM lab16_accounts;
+ total_balance
+---------------
+       1500.00
+(1 row)
+
+COMMIT;
+COMMIT

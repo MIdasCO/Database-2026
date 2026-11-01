@@ -1,0 +1,134 @@
+\copy (SELECT student_id, first_name, last_name, email, birth_date FROM students ORDER BY student_id) TO '/private/tmp/auca_lab17_students.csv' WITH (FORMAT csv, HEADER true)
+COPY 5
+CREATE TABLE lab17_students_copy AS
+SELECT student_id, first_name, last_name, email, birth_date
+FROM students WITH NO DATA;
+CREATE TABLE AS
+\copy lab17_students_copy FROM '/private/tmp/auca_lab17_students.csv' WITH (FORMAT csv, HEADER true)
+COPY 5
+SELECT COUNT(*) AS source_rows FROM students;
+ source_rows
+-------------
+           5
+(1 row)
+
+SELECT COUNT(*) AS imported_rows FROM lab17_students_copy;
+ imported_rows
+---------------
+             5
+(1 row)
+
+SELECT COUNT(*) AS mismatched_rows FROM (
+    (SELECT student_id, first_name, last_name, email, birth_date FROM students
+     EXCEPT
+     SELECT student_id, first_name, last_name, email, birth_date FROM lab17_students_copy)
+    UNION ALL
+    (SELECT student_id, first_name, last_name, email, birth_date FROM lab17_students_copy
+     EXCEPT
+     SELECT student_id, first_name, last_name, email, birth_date FROM students)
+) AS differences;
+ mismatched_rows
+-----------------
+               0
+(1 row)
+
+SELECT * FROM lab17_students_copy ORDER BY student_id;
+ student_id | first_name | last_name |     email      | birth_date
+------------+------------+-----------+----------------+------------
+          1 | Alice      | Johnson   | alice@auca.kg  | 2002-05-12
+          2 | Bob        | Smith     | bob@gmail.com  | 2001-09-23
+          3 | Carol      | Davis     | carol@auca.kg  | 2003-01-15
+          4 | Abdel      | Rysbekov  | abdel@auca.kg  | 2002-07-30
+          5 | Dina       | Lee       | dina@gmail.com | 2002-11-05
+(5 rows)
+
+$ pg_dump -Fc -d data2 -f data2_lab17.dump
+$ pg_restore --list data2_lab17.dump
+230; 1259 235689 TABLE public courses ra
+229; 1259 235688 SEQUENCE public courses_course_id_seq ra
+3953; 0 0 SEQUENCE OWNED BY public courses_course_id_seq ra
+220; 1259 235539 TABLE public departments ra
+219; 1259 235538 SEQUENCE public departments_dept_id_seq ra
+3954; 0 0 SEQUENCE OWNED BY public departments_dept_id_seq ra
+222; 1259 235623 TABLE public employees ra
+221; 1259 235622 SEQUENCE public employees_emp_id_seq ra
+3955; 0 0 SEQUENCE OWNED BY public employees_emp_id_seq ra
+231; 1259 235711 TABLE public enrollments ra
+224; 1259 235639 TABLE public faculties ra
+223; 1259 235638 SEQUENCE public faculties_faculty_id_seq ra
+3956; 0 0 SEQUENCE OWNED BY public faculties_faculty_id_seq ra
+228; 1259 235663 TABLE public instructors ra
+227; 1259 235662 SEQUENCE public instructors_instructor_id_seq ra
+3957; 0 0 SEQUENCE OWNED BY public instructors_instructor_id_seq ra
+233; 1259 235730 TABLE public lab11_people ra
+232; 1259 235729 SEQUENCE public lab11_people_person_id_seq ra
+3958; 0 0 SEQUENCE OWNED BY public lab11_people_person_id_seq ra
+235; 1259 235741 TABLE public lab16_accounts ra
+234; 1259 235740 SEQUENCE public lab16_accounts_account_id_seq ra
+3959; 0 0 SEQUENCE OWNED BY public lab16_accounts_account_id_seq ra
+236; 1259 235751 TABLE public lab17_students_copy ra
+226; 1259 235650 TABLE public students ra
+225; 1259 235649 SEQUENCE public students_student_id_seq ra
+3960; 0 0 SEQUENCE OWNED BY public students_student_id_seq ra
+3743; 2604 235692 DEFAULT public courses course_id ra
+3738; 2604 235542 DEFAULT public departments dept_id ra
+3739; 2604 235626 DEFAULT public employees emp_id ra
+3740; 2604 235642 DEFAULT public faculties faculty_id ra
+3742; 2604 235666 DEFAULT public instructors instructor_id ra
+3744; 2604 235733 DEFAULT public lab11_people person_id ra
+3745; 2604 235744 DEFAULT public lab16_accounts account_id ra
+3741; 2604 235653 DEFAULT public students student_id ra
+3940; 0 235689 TABLE DATA public courses ra
+3930; 0 235539 TABLE DATA public departments ra
+3932; 0 235623 TABLE DATA public employees ra
+3941; 0 235711 TABLE DATA public enrollments ra
+3934; 0 235639 TABLE DATA public faculties ra
+3938; 0 235663 TABLE DATA public instructors ra
+3943; 0 235730 TABLE DATA public lab11_people ra
+3945; 0 235741 TABLE DATA public lab16_accounts ra
+3946; 0 235751 TABLE DATA public lab17_students_copy ra
+3936; 0 235650 TABLE DATA public students ra
+3961; 0 0 SEQUENCE SET public courses_course_id_seq ra
+3962; 0 0 SEQUENCE SET public departments_dept_id_seq ra
+3963; 0 0 SEQUENCE SET public employees_emp_id_seq ra
+3964; 0 0 SEQUENCE SET public faculties_faculty_id_seq ra
+3965; 0 0 SEQUENCE SET public instructors_instructor_id_seq ra
+3966; 0 0 SEQUENCE SET public lab11_people_person_id_seq ra
+3967; 0 0 SEQUENCE SET public lab16_accounts_account_id_seq ra
+3968; 0 0 SEQUENCE SET public students_student_id_seq ra
+3765; 2606 235700 CONSTRAINT public courses courses_course_name_key ra
+3767; 2606 235698 CONSTRAINT public courses courses_pkey ra
+3749; 2606 235546 CONSTRAINT public departments departments_pkey ra
+3751; 2606 235631 CONSTRAINT public employees employees_pkey ra
+3769; 2606 235718 CONSTRAINT public enrollments enrollments_pkey ra
+3753; 2606 235648 CONSTRAINT public faculties faculties_faculty_name_key ra
+3755; 2606 235646 CONSTRAINT public faculties faculties_pkey ra
+3761; 2606 235677 CONSTRAINT public instructors instructors_email_key ra
+3763; 2606 235675 CONSTRAINT public instructors instructors_pkey ra
+3772; 2606 235738 CONSTRAINT public lab11_people lab11_people_pkey ra
+3774; 2606 235750 CONSTRAINT public lab16_accounts lab16_accounts_pkey ra
+3757; 2606 235661 CONSTRAINT public students students_email_key ra
+3759; 2606 235659 CONSTRAINT public students students_pkey ra
+3770; 1259 235739 INDEX public idx_enrollments_course_id ra
+3778; 2606 235701 FK CONSTRAINT public courses courses_faculty_id_fkey ra
+3779; 2606 235706 FK CONSTRAINT public courses courses_instructor_id_fkey ra
+3775; 2606 235632 FK CONSTRAINT public employees employees_dept_id_fkey ra
+3780; 2606 235724 FK CONSTRAINT public enrollments enrollments_course_id_fkey ra
+3781; 2606 235719 FK CONSTRAINT public enrollments enrollments_student_id_fkey ra
+3776; 2606 235678 FK CONSTRAINT public instructors instructors_faculty_id_fkey ra
+3777; 2606 235683 FK CONSTRAINT public instructors instructors_manager_id_fkey ra
+
+$ psql -X -d data2 -c 'TRUNCATE TABLE lab17_students_copy;'
+TRUNCATE TABLE
+$ pg_restore -d data2 -a -t lab17_students_copy data2_lab17.dump
+SELECT COUNT(*) AS restored_rows FROM lab17_students_copy;
+ restored_rows
+---------------
+             5
+(1 row)
+
+SELECT COUNT(*) AS mismatched_rows FROM ((SELECT * FROM students EXCEPT SELECT * FROM lab17_students_copy) UNION ALL (SELECT * FROM lab17_students_copy EXCEPT SELECT * FROM students)) AS differences;
+ mismatched_rows
+-----------------
+               0
+(1 row)

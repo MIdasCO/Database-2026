@@ -1,0 +1,85 @@
+CREATE TABLE faculties (
+    faculty_id SERIAL PRIMARY KEY,
+    faculty_name VARCHAR(100) NOT NULL UNIQUE
+);
+CREATE TABLE
+CREATE TABLE students (
+    student_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    birth_date DATE
+);
+CREATE TABLE
+CREATE TABLE instructors (
+    instructor_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    faculty_id INTEGER NOT NULL REFERENCES faculties(faculty_id),
+    manager_id INTEGER REFERENCES instructors(instructor_id),
+    salary NUMERIC(10,2) NOT NULL CHECK (salary >= 0)
+);
+CREATE TABLE
+CREATE TABLE courses (
+    course_id SERIAL PRIMARY KEY,
+    course_name VARCHAR(100) NOT NULL UNIQUE,
+    faculty_id INTEGER NOT NULL REFERENCES faculties(faculty_id),
+    instructor_id INTEGER NOT NULL REFERENCES instructors(instructor_id)
+);
+CREATE TABLE
+CREATE TABLE enrollments (
+    student_id INTEGER NOT NULL REFERENCES students(student_id),
+    course_id INTEGER NOT NULL REFERENCES courses(course_id),
+    semester VARCHAR(20) NOT NULL,
+    grade VARCHAR(2),
+    PRIMARY KEY (student_id, course_id, semester)
+);
+CREATE TABLE
+INSERT INTO faculties (faculty_name) VALUES
+    ('Computer Science'), ('Mathematics'), ('Humanities'), ('Physics');
+INSERT 0 4
+INSERT INTO students (first_name, last_name, email, birth_date) VALUES
+    ('Alice', 'Johnson', 'alice@auca.kg', '2002-05-12'),
+    ('Bob', 'Smith', 'bob@gmail.com', '2001-09-23'),
+    ('Carol', 'Davis', 'carol@auca.kg', '2003-01-15'),
+    ('Abdel', 'Rysbekov', 'abdel@auca.kg', '2002-07-30'),
+    ('Dina', 'Lee', 'dina@gmail.com', '2002-11-05');
+INSERT 0 5
+INSERT INTO instructors (first_name, last_name, email, faculty_id, manager_id, salary) VALUES
+    ('Ada', 'Lovelace', 'ada@auca.kg', 1, NULL, 120000),
+    ('Ben', 'Turing', 'ben@auca.kg', 1, 1, 90000),
+    ('Cara', 'Noether', 'cara@auca.kg', 2, 1, 95000),
+    ('Dan', 'Orwell', 'dan@auca.kg', 3, 1, 65000),
+    ('Eva', 'Curie', 'eva@auca.kg', 4, 3, 105000);
+INSERT 0 5
+INSERT INTO courses (course_name, faculty_id, instructor_id) VALUES
+    ('Database Systems', 1, 1),
+    ('Algorithms', 1, 2),
+    ('Statistics', 2, 3),
+    ('Academic Writing', 3, 4),
+    ('Physics', 4, 5);
+INSERT 0 5
+INSERT INTO enrollments (student_id, course_id, semester, grade) VALUES
+    (1, 1, '2026-Fall', 'A'),
+    (1, 2, '2026-Fall', 'B+'),
+    (2, 1, '2026-Fall', 'B'),
+    (2, 3, '2026-Fall', 'A-'),
+    (3, 4, '2026-Fall', 'A'),
+    (4, 1, '2026-Fall', 'A'),
+    (5, 2, '2026-Fall', 'B');
+INSERT 0 7
+SELECT 'faculties' AS entity, COUNT(*) FROM faculties
+UNION ALL SELECT 'students', COUNT(*) FROM students
+UNION ALL SELECT 'instructors', COUNT(*) FROM instructors
+UNION ALL SELECT 'courses', COUNT(*) FROM courses
+UNION ALL SELECT 'enrollments', COUNT(*) FROM enrollments
+ORDER BY entity;
+   entity    | count
+-------------+-------
+ courses     |     5
+ enrollments |     7
+ faculties   |     4
+ instructors |     5
+ students    |     5
+(5 rows)

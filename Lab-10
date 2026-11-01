@@ -1,0 +1,94 @@
+\dt
+            List of tables
+ Schema |    Name     | Type  | Owner
+--------+-------------+-------+-------
+ public | courses     | table | ra
+ public | departments | table | ra
+ public | employees   | table | ra
+ public | enrollments | table | ra
+ public | faculties   | table | ra
+ public | instructors | table | ra
+ public | students    | table | ra
+(7 rows)
+
+\d faculties
+                                           Table "public.faculties"
+    Column    |          Type          | Collation | Nullable |                    Default
+--------------+------------------------+-----------+----------+-----------------------------------------------
+ faculty_id   | integer                |           | not null | nextval('faculties_faculty_id_seq'::regclass)
+ faculty_name | character varying(100) |           | not null |
+Indexes:
+    "faculties_pkey" PRIMARY KEY, btree (faculty_id)
+    "faculties_faculty_name_key" UNIQUE CONSTRAINT, btree (faculty_name)
+Referenced by:
+    TABLE "courses" CONSTRAINT "courses_faculty_id_fkey" FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id)
+    TABLE "instructors" CONSTRAINT "instructors_faculty_id_fkey" FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id)
+
+\d students
+                                          Table "public.students"
+   Column   |          Type          | Collation | Nullable |                   Default
+------------+------------------------+-----------+----------+----------------------------------------------
+ student_id | integer                |           | not null | nextval('students_student_id_seq'::regclass)
+ first_name | character varying(100) |           | not null |
+ last_name  | character varying(100) |           | not null |
+ email      | character varying(150) |           | not null |
+ birth_date | date                   |           |          |
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (student_id)
+    "students_email_key" UNIQUE CONSTRAINT, btree (email)
+Referenced by:
+    TABLE "enrollments" CONSTRAINT "enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES students(student_id)
+
+\d courses
+                                           Table "public.courses"
+    Column     |          Type          | Collation | Nullable |                  Default
+---------------+------------------------+-----------+----------+--------------------------------------------
+ course_id     | integer                |           | not null | nextval('courses_course_id_seq'::regclass)
+ course_name   | character varying(100) |           | not null |
+ faculty_id    | integer                |           | not null |
+ instructor_id | integer                |           | not null |
+Indexes:
+    "courses_pkey" PRIMARY KEY, btree (course_id)
+    "courses_course_name_key" UNIQUE CONSTRAINT, btree (course_name)
+Foreign-key constraints:
+    "courses_faculty_id_fkey" FOREIGN KEY (faculty_id) REFERENCES faculties(faculty_id)
+    "courses_instructor_id_fkey" FOREIGN KEY (instructor_id) REFERENCES instructors(instructor_id)
+Referenced by:
+    TABLE "enrollments" CONSTRAINT "enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(course_id)
+
+\d enrollments
+                     Table "public.enrollments"
+   Column   |         Type          | Collation | Nullable | Default
+------------+-----------------------+-----------+----------+---------
+ student_id | integer               |           | not null |
+ course_id  | integer               |           | not null |
+ semester   | character varying(20) |           | not null |
+ grade      | character varying(2)  |           |          |
+Indexes:
+    "enrollments_pkey" PRIMARY KEY, btree (student_id, course_id, semester)
+Foreign-key constraints:
+    "enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(course_id)
+    "enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES students(student_id)
+
+SELECT tc.table_name, kcu.column_name, ccu.table_name AS references_table,
+       ccu.column_name AS references_column
+FROM information_schema.table_constraints AS tc
+JOIN information_schema.key_column_usage AS kcu
+  ON tc.constraint_name = kcu.constraint_name
+ AND tc.table_schema = kcu.table_schema
+JOIN information_schema.constraint_column_usage AS ccu
+  ON tc.constraint_name = ccu.constraint_name
+ AND tc.table_schema = ccu.table_schema
+WHERE tc.constraint_type = 'FOREIGN KEY'
+  AND tc.table_schema = 'public'
+  AND tc.table_name IN ('instructors', 'courses', 'enrollments')
+ORDER BY tc.table_name, kcu.column_name;
+ table_name  |  column_name  | references_table | references_column
+-------------+---------------+------------------+-------------------
+ courses     | faculty_id    | faculties        | faculty_id
+ courses     | instructor_id | instructors      | instructor_id
+ enrollments | course_id     | courses          | course_id
+ enrollments | student_id    | students         | student_id
+ instructors | faculty_id    | faculties        | faculty_id
+ instructors | manager_id    | instructors      | instructor_id
+(6 rows)

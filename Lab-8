@@ -1,0 +1,81 @@
+data2=# create table departments(
+data2(# dept_id serial primary key,
+data2(# dept_name varchar(100) not null,
+data2(# location varchar(100));
+CREATE TABLE
+data2=# create table employees(
+data2(# emp_id serial primary key,
+data2(# first_name varchar(100) not null,
+data2(# last_name varchar(100) not null,
+data2(# dept_id integer refer
+
+data2(# dept_id integer references departments(dept_id));
+CREATE TABLE
+
+data2=# drop table employees;
+DROP TABLE
+
+data2=# create table employees(
+data2(# imp_id serial primary key,
+data2(# first_name varchar(100) not null,
+data2(# last_name varchar(100) not null,
+data2(# dept_id integer,
+data2(# foreign key (dept_id) references departments(dept_id));
+CREATE TABLE
+data2=# alter table employees add constraint fk_employee_department foreign key (dept_id) references departments(dept_id);
+ALTER TABLE
+
+data2=# drop table employees ;
+DROP TABLE
+data2=# create table employees(
+imp_id serial primary key,
+first_name varchar(100) not null,
+last_name varchar(100) not null,
+dept_id integer,
+constraint fk_employee_department foreign key (dept_id) references departments(dept_id));
+CREATE TABLE
+
+data2=# insert into departments (dept_name, location) values ('Engineering','Building A'), ('Marketing','Building B'), ('HR','Building C');
+INSERT 0 3
+data2=# insert into employees (first_name, last_name, dept_id) values ('John','Smith',1);
+INSERT 0 1
+data2=# insert into employees (first_name, last_name, dept_id) values ('Jane','Doe',99);
+ERROR:  insert or update on table "employees" violates foreign key constraint "fk_employee_department"
+DETAIL:  Key (dept_id)=(99) is not present in table "departments".
+data2=# delete from departments where dept_id = 1;
+ERROR:  update or delete on table "departments" violates foreign key constraint "fk_employee_department" on table "employees"
+DETAIL:  Key (dept_id)=(1) is still referenced from table "employees".
+
+data2=# drop table employees ;
+DROP TABLE
+data2=# create table employees(
+emp_id serial primary key,
+first_name varchar(100) not null,
+last_name varchar(100) not null,
+dept_id integer references departments(dept_id) on delete cascade);
+CREATE TABLE
+data2=# insert into employees (first_name, last_name, dept_id) values ('John','Smith',1);
+INSERT 0 1
+data2=# delete from employees where dept_id = 1;
+DELETE 1
+
+data2=# drop table employees ;
+DROP TABLE
+data2=# create table employees(
+emp_id serial primary key,
+first_name varchar(100) not null,
+last_name varchar(100) not null,
+dept_id integer references departments(dept_id) on delete set null);
+CREATE TABLE
+data2=# insert into employees (first_name, last_name, dept_id) values ('John','Smith',1);
+INSERT 0 1
+data2=# delete from departments where dept_id = 1;
+DELETE 1
+data2=# select * from employees;
+ emp_id | first_name | last_name | dept_id
+--------+------------+-----------+---------
+      1 | John       | Smith     |
+(1 row)
+
+
+

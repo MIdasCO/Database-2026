@@ -1,0 +1,131 @@
+SELECT s.first_name, c.course_name, e.grade
+FROM students AS s
+INNER JOIN enrollments AS e USING (student_id)
+INNER JOIN courses AS c USING (course_id)
+ORDER BY s.student_id, c.course_id;
+ first_name |   course_name    | grade
+------------+------------------+-------
+ Alice      | Database Systems | A
+ Alice      | Algorithms       | B+
+ Bob        | Database Systems | B
+ Bob        | Statistics       | A-
+ Carol      | Academic Writing | A
+ Abdel      | Database Systems | A
+ Dina       | Algorithms       | B
+(7 rows)
+
+SELECT c.course_name, e.student_id, e.grade
+FROM courses AS c
+LEFT JOIN enrollments AS e USING (course_id)
+ORDER BY c.course_id, e.student_id;
+   course_name    | student_id | grade
+------------------+------------+-------
+ Database Systems |          1 | A
+ Database Systems |          2 | B
+ Database Systems |          4 | A
+ Algorithms       |          1 | B+
+ Algorithms       |          5 | B
+ Statistics       |          2 | A-
+ Academic Writing |          3 | A
+ Physics          |            |
+(8 rows)
+
+SELECT c.course_name, e.student_id
+FROM enrollments AS e
+RIGHT JOIN courses AS c USING (course_id)
+ORDER BY c.course_id, e.student_id;
+   course_name    | student_id
+------------------+------------
+ Database Systems |          1
+ Database Systems |          2
+ Database Systems |          4
+ Algorithms       |          1
+ Algorithms       |          5
+ Statistics       |          2
+ Academic Writing |          3
+ Physics          |
+(8 rows)
+
+SELECT c.course_name, e.student_id
+FROM courses AS c
+FULL OUTER JOIN enrollments AS e USING (course_id)
+ORDER BY c.course_id, e.student_id;
+   course_name    | student_id
+------------------+------------
+ Database Systems |          1
+ Database Systems |          2
+ Database Systems |          4
+ Algorithms       |          1
+ Algorithms       |          5
+ Statistics       |          2
+ Academic Writing |          3
+ Physics          |
+(8 rows)
+
+SELECT f.faculty_name, c.course_name
+FROM (SELECT * FROM faculties WHERE faculty_id <= 2) AS f
+CROSS JOIN (SELECT * FROM courses WHERE course_id <= 2) AS c
+ORDER BY f.faculty_id, c.course_id;
+   faculty_name   |   course_name
+------------------+------------------
+ Computer Science | Database Systems
+ Computer Science | Algorithms
+ Mathematics      | Database Systems
+ Mathematics      | Algorithms
+(4 rows)
+
+SELECT i.first_name AS instructor, m.first_name AS manager
+FROM instructors AS i
+LEFT JOIN instructors AS m ON i.manager_id = m.instructor_id
+ORDER BY i.instructor_id;
+ instructor | manager
+------------+---------
+ Ada        |
+ Ben        | Ada
+ Cara       | Ada
+ Dan        | Ada
+ Eva        | Cara
+(5 rows)
+
+SELECT s.first_name, c.course_name, e.semester, e.grade
+FROM students AS s
+JOIN enrollments AS e USING (student_id)
+JOIN courses AS c USING (course_id)
+ORDER BY s.student_id, c.course_id;
+ first_name |   course_name    | semester  | grade
+------------+------------------+-----------+-------
+ Alice      | Database Systems | 2026-Fall | A
+ Alice      | Algorithms       | 2026-Fall | B+
+ Bob        | Database Systems | 2026-Fall | B
+ Bob        | Statistics       | 2026-Fall | A-
+ Carol      | Academic Writing | 2026-Fall | A
+ Abdel      | Database Systems | 2026-Fall | A
+ Dina       | Algorithms       | 2026-Fall | B
+(7 rows)
+
+SELECT c.course_name
+FROM courses AS c
+LEFT JOIN enrollments AS e USING (course_id)
+WHERE e.student_id IS NULL
+ORDER BY c.course_id;
+ course_name
+-------------
+ Physics
+(1 row)
+
+CREATE INDEX idx_enrollments_course_id ON enrollments(course_id);
+CREATE INDEX
+\d enrollments
+                     Table "public.enrollments"
+   Column   |         Type          | Collation | Nullable | Default
+------------+-----------------------+-----------+----------+---------
+ student_id | integer               |           | not null |
+ course_id  | integer               |           | not null |
+ semester   | character varying(20) |           | not null |
+ grade      | character varying(2)  |           |          |
+Indexes:
+    "enrollments_pkey" PRIMARY KEY, btree (student_id, course_id, semester)
+    "idx_enrollments_course_id" btree (course_id)
+Foreign-key constraints:
+    "enrollments_course_id_fkey" FOREIGN KEY (course_id) REFERENCES courses(course_id)
+    "enrollments_student_id_fkey" FOREIGN KEY (student_id) REFERENCES students(student_id)

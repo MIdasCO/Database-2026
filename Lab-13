@@ -1,0 +1,82 @@
+SELECT COUNT(*) AS total_students, COUNT(birth_date) AS dated_students
+FROM students;
+ total_students | dated_students
+----------------+----------------
+              5 |              5
+(1 row)
+
+SELECT COUNT(DISTINCT faculty_id) AS represented_faculties,
+       SUM(salary) AS total_salaries,
+       ROUND(AVG(salary), 2) AS average_salary,
+       MIN(salary) AS lowest_salary,
+       MAX(salary) AS highest_salary
+FROM instructors;
+ represented_faculties | total_salaries | average_salary | lowest_salary | highest_salary
+-----------------------+----------------+----------------+---------------+----------------
+                     4 |      475000.00 |       95000.00 |      65000.00 |      120000.00
+(1 row)
+
+SELECT f.faculty_name, COUNT(i.instructor_id) AS instructor_count,
+       COALESCE(SUM(i.salary), 0) AS total_salary,
+       ROUND(AVG(i.salary), 2) AS average_salary
+FROM faculties AS f
+LEFT JOIN instructors AS i USING (faculty_id)
+GROUP BY f.faculty_id, f.faculty_name
+ORDER BY f.faculty_id;
+   faculty_name   | instructor_count | total_salary | average_salary
+------------------+------------------+--------------+----------------
+ Computer Science |                2 |    210000.00 |      105000.00
+ Mathematics      |                1 |     95000.00 |       95000.00
+ Humanities       |                1 |     65000.00 |       65000.00
+ Physics          |                1 |    105000.00 |      105000.00
+(4 rows)
+
+SELECT c.course_name, COUNT(e.student_id) AS enrollment_count,
+       STRING_AGG(s.first_name, ', ' ORDER BY s.first_name) AS students
+FROM courses AS c
+LEFT JOIN enrollments AS e USING (course_id)
+LEFT JOIN students AS s USING (student_id)
+GROUP BY c.course_id, c.course_name
+ORDER BY c.course_id;
+   course_name    | enrollment_count |     students
+------------------+------------------+-------------------
+ Database Systems |                3 | Abdel, Alice, Bob
+ Algorithms       |                2 | Alice, Dina
+ Statistics       |                1 | Bob
+ Academic Writing |                1 | Carol
+ Physics          |                0 |
+(5 rows)
+
+SELECT course_id, ARRAY_AGG(grade ORDER BY grade) AS grades
+FROM enrollments GROUP BY course_id ORDER BY course_id;
+ course_id | grades
+-----------+---------
+         1 | {A,A,B}
+         2 | {B,B+}
+         3 | {A-}
+         4 | {A}
+(4 rows)
+
+SELECT f.faculty_name, COUNT(e.student_id) AS enrollments
+FROM faculties AS f
+JOIN courses AS c USING (faculty_id)
+LEFT JOIN enrollments AS e USING (course_id)
+GROUP BY f.faculty_id, f.faculty_name
+HAVING COUNT(e.student_id) >= 2
+ORDER BY enrollments DESC;
+   faculty_name   | enrollments
+------------------+-------------
+ Computer Science |           5
+(1 row)
+
+SELECT first_name, salary,
+       ROUND(AVG(salary) OVER (PARTITION BY faculty_id), 2) AS faculty_average
+FROM instructors ORDER BY instructor_id;
+ first_name |  salary   | faculty_average
+------------+-----------+-----------------
+ Ada        | 120000.00 |       105000.00
+ Ben        |  90000.00 |       105000.00
+ Cara       |  95000.00 |        95000.00
+ Dan        |  65000.00 |        65000.00
+ Eva        | 105000.00 |       105000.00
+(5 rows)
