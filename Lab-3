@@ -49,3 +49,6 @@ data=# \d students;
  surname | character varying(100) |           |          |
 Indexes:
     "students_pkey" PRIMARY KEY, btree (id)
+
+data=# INSERT INTO students (name, age, gmail, surname) VALUES ('Alice', 21, 'alice@gmail.com','Babanova'), ('Bob', 23,'bob@gmail.com','Japarov'),('Abdel',20,'abdel@gmail.com','Rysbekov');
+INSERT 0 3
