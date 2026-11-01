@@ -4,12 +4,6 @@
 - **Major:** Software Engineering
 - **Instructor:** Gulzada Esenalieva, Ph.D., Associate Professor
 
-## Course commitment and academic integrity
-
-I have read and agree to follow the terms, requirements, and policies of the AUCA Databases course (COM-424.1). I commit to completing the required laboratory assignments, coursework, and projects and submitting them by the assigned deadlines.
-
-I will follow AUCA's academic integrity rules. The work I submit in this repository will be my own, and I will acknowledge sources or assistance as required by the course policies.
-
 ## Course topics
 
 | Lab | Topic |
