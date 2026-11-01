@@ -1,0 +1,32 @@
+ra=# create database abdel;
+CREATE DATABASE
+ra=# \l
+                                                  List of databases
+   Name    | Owner | Encoding | Locale Provider |   Collate   |    Ctype    | Locale | ICU Rules | Access privileges
+-----------+-------+----------+-----------------+-------------+-------------+--------+-----------+-------------------
+ abdel     | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ data      | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ ra        | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ template0 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+ template1 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+(5 rows)
+
+ra=# drop database abdel;
+DROP DATABASE
+ra=# \l
+                                                  List of databases
+   Name    | Owner | Encoding | Locale Provider |   Collate   |    Ctype    | Locale | ICU Rules | Access privileges
+-----------+-------+----------+-----------------+-------------+-------------+--------+-----------+-------------------
+ data      | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ ra        | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ template0 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+ template1 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+(4 rows)
+
+ra=# \c data
+You are now connected to database "data" as user "ra".
+data=#
