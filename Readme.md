@@ -1,19 +1,35 @@
-лаба 3
+# AUCA Databases Course (COM-424.1)
 
-![img.png](img.png)
+- **Student:** Abdel Rysbekov
+- **Major:** Software Engineering
+- **Instructor:** Gulzada Esenalieva, Ph.D., Associate Professor
 
-лаба 4
+## Course commitment and academic integrity
 
-![img_1.png](img_1.png)
+I have read and agree to follow the terms, requirements, and policies of the AUCA Databases course (COM-424.1). I commit to completing the required laboratory assignments, coursework, and projects and submitting them by the assigned deadlines.
 
-лаба 5
+I will follow AUCA's academic integrity rules. The work I submit in this repository will be my own, and I will acknowledge sources or assistance as required by the course policies.
 
-![img_2.png](img_2.png)
+## Course topics
 
-лаба 6
+| Lab | Topic |
+| --- | --- |
+| 3 | Basic `psql` commands |
+| 4 | First SQL query |
+| 5 | Databases |
+| 6 | Tables, data types, and constraints |
+| 7 | Primary keys |
+| 8 | Foreign keys and relationships |
+| 9 | Database design basics |
+| 10 | Viewing database and table structure |
+| 11 | Basic data operations |
+| 12 | Querying data |
+| 13 | Aggregate functions |
+| 14 | Joining tables |
+| 15 | Advanced querying |
+| 16 | Transactions and ACID properties |
+| 17 | Data import, export, and backup |
 
-![img_3.png](img_3.png)
-![img_4.png](img_4.png)
+**Oracle Academy:** 
 
-лаба 7
-потом
+**Certificate of employment:**
