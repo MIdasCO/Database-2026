@@ -1,0 +1,45 @@
+data=# select * from students;
+ id | name  | age |      gmail      | surname
+----+-------+-----+-----------------+----------
+  1 | Alice |  21 | alice@gmail.com | Babanova
+  2 | Bob   |  23 | bob@gmail.com   | Japarov
+  3 | Abdel |  20 | abdel@gmail.com | Rysbekov
+(3 rows)
+
+data=# select name, age from students;
+ name  | age
+-------+-----
+ Alice |  21
+ Bob   |  23
+ Abdel |  20
+(3 rows)
+
+data=# select id, gmail from students
+data-# ;
+ id |      gmail
+----+-----------------
+  1 | alice@gmail.com
+  2 | bob@gmail.com
+  3 | abdel@gmail.com
+(3 rows)
+
+data=# select * from students where age = 23;
+ id | name | age |     gmail     | surname
+----+------+-----+---------------+---------
+  2 | Bob  |  23 | bob@gmail.com | Japarov
+(1 row)
+
+data=# select name,age,gmail from students order by age asc;
+ name  | age |      gmail
+-------+-----+-----------------
+ Abdel |  20 | abdel@gmail.com
+ Alice |  21 | alice@gmail.com
+ Bob   |  23 | bob@gmail.com
+(3 rows)
+
+data=# select * from students limit 1;
+ id | name  | age |      gmail      | surname
+----+-------+-----+-----------------+----------
+  1 | Alice |  21 | alice@gmail.com | Babanova
+(1 row)
+
