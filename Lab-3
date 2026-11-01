@@ -1,0 +1,51 @@
+ra@Abdeks-MacBook-Air ~ % psql
+psql (18.4 (Homebrew))
+Type "help" for help.
+
+ra=# create database data
+ra-# ;
+CREATE DATABASE
+ra=# \c data
+You are now connected to database "data" as user "ra".
+data=# \d
+Did not find any relations.
+data=# \l
+                                                  List of databases
+   Name    | Owner | Encoding | Locale Provider |   Collate   |    Ctype    | Locale | ICU Rules | Access privileges
+-----------+-------+----------+-----------------+-------------+-------------+--------+-----------+-------------------
+ data      | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ ra        | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           |
+ template0 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+ template1 | ra    | UTF8     | libc            | en_US.UTF-8 | en_US.UTF-8 |        |           | =c/ra            +
+           |       |          |                 |             |             |        |           | ra=CTc/ra
+(4 rows)
+
+data=# create table students(
+id serial primary key,
+name varchar(100),
+age int,
+gmail varchar(100),
+surname varchar(100)
+)
+data-# ;
+
+data=# \d
+              List of relations
+ Schema |      Name       |   Type   | Owner
+--------+-----------------+----------+-------
+ public | students        | table    | ra
+ public | students_id_seq | sequence | ra
+(2 rows)
+
+data=# \d students;
+                                    Table "public.students"
+ Column  |          Type          | Collation | Nullable |               Default
+---------+------------------------+-----------+----------+--------------------------------------
+ id      | integer                |           | not null | nextval('students_id_seq'::regclass)
+ name    | character varying(100) |           |          |
+ age     | integer                |           |          |
+ gmail   | character varying(100) |           |          |
+ surname | character varying(100) |           |          |
+Indexes:
+    "students_pkey" PRIMARY KEY, btree (id)
